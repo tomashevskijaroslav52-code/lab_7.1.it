@@ -52,7 +52,7 @@ void Print(int** Z, int rowCount, int colCount)
     cout << endl;
 }
 
-// 5. Перестановка стовпчиків матриці згідно з умовами варіанта (сортування бульбашкою за спаданням)
+// 5. Перестановка стовпчиків матриці за спаданням (Descending order)
 void SortColumns(int** Z, int rowCount, int colCount)
 {
     for (int j0 = 0; j0 < colCount - 1; j0++)
@@ -61,8 +61,8 @@ void SortColumns(int** Z, int rowCount, int colCount)
         {
             bool needSwap = false;
 
-            // Порівнюємо елементи першого рядка (рядок 0)
-            if (Z[0][j1] < Z[0][j1 + 1]) // для спадання: якщо лівий менший за правий
+            // Порівнюємо елементи першого рядка (рядок 0) за спаданням: якщо лівий менший за правий, міняємо місцями
+            if (Z[0][j1] < Z[0][j1 + 1])
             {
                 needSwap = true;
             }
@@ -97,10 +97,29 @@ void SortColumns(int** Z, int rowCount, int colCount)
     }
 }
 
+// 6. Перевірка критерію: "всі додатні або непарні"
+void CheckCriteria(int** Z, int rowCount, int colCount)
+{
+    cout << "--- Criteria Check (All elements positive or odd in column) ---" << endl;
+    for (int j = 0; j < colCount; j++)
+    {
+        bool allPositiveOrOdd = true;
+        for (int i = 0; i < rowCount; i++)
+        {
+            // Умова: елемент додатний (> 0) або непарний (Z[i][j] % 2 != 0)
+            if (!(Z[i][j] > 0 || Z[i][j] % 2 != 0))
+            {
+                allPositiveOrOdd = false;
+                break;
+            }
+        }
+        cout << "Column " << j << ": " << (allPositiveOrOdd ? "Yes (satisfied)" : "No (not satisfied)") << endl;
+    }
+    cout << endl;
+}
+
 int main()
 {
-    // Встановлюємо кодування UTF-8 для коректного виведення (якщо потрібно)
-    system("chcp 65001 > nul");
     srand((unsigned)time(NULL));
 
     int rowCount = 8;
@@ -115,6 +134,9 @@ int main()
     Create(Z, rowCount, colCount, Low, High);
     cout << "Initial matrix Z (8x6):" << endl;
     Print(Z, rowCount, colCount);
+
+    // Перевірка критерію для початкової матриці
+    CheckCriteria(Z, rowCount, colCount);
 
     // Сортування (перестановка) стовпчиків
     SortColumns(Z, rowCount, colCount);
