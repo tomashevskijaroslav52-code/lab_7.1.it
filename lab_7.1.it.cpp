@@ -61,7 +61,7 @@ void SortColumns(int** Z, int rowCount, int colCount)
         {
             bool needSwap = false;
 
-            // Порівнюємо елементи першого рядка (рядок 0) за спаданням: якщо лівий менший за правий, міняємо місцями
+            // Порівнюємо елементи першого рядка (рядок 0) за спаданням
             if (Z[0][j1] < Z[0][j1 + 1])
             {
                 needSwap = true;
@@ -97,25 +97,24 @@ void SortColumns(int** Z, int rowCount, int colCount)
     }
 }
 
-// 6. Перевірка критерію: "всі додатні або непарні"
-void CheckCriteria(int** Z, int rowCount, int colCount)
+// 6. Обчислення кількості (k), суми (S) елементів за критерієм та заміна їх нулями
+void Calc(int** Z, const int rowCount, const int colCount, int& S, int& k)
 {
-    cout << "--- Criteria Check (All elements positive or odd in column) ---" << endl;
-    for (int j = 0; j < colCount; j++)
+    S = 0;
+    k = 0;
+    for (int i = 0; i < rowCount; i++)
     {
-        bool allPositiveOrOdd = true;
-        for (int i = 0; i < rowCount; i++)
+        for (int j = 0; j < colCount; j++)
         {
-            // Умова: елемент додатний (> 0) або непарний (Z[i][j] % 2 != 0)
-            if (!(Z[i][j] > 0 || Z[i][j] % 2 != 0))
+            // Критерій Варіанта 15: елемент додатний (> 0) або непарний (Z[i][j] % 2 != 0)
+            if (Z[i][j] > 0 || Z[i][j] % 2 != 0)
             {
-                allPositiveOrOdd = false;
-                break;
+                S += Z[i][j];
+                k++;
+                Z[i][j] = 0; // заміна нулями
             }
         }
-        cout << "Column " << j << ": " << (allPositiveOrOdd ? "Yes (satisfied)" : "No (not satisfied)") << endl;
     }
-    cout << endl;
 }
 
 int main()
@@ -135,10 +134,19 @@ int main()
     cout << "Initial matrix Z (8x6):" << endl;
     Print(Z, rowCount, colCount);
 
-    // Перевірка критерію для початкової матриці
-    CheckCriteria(Z, rowCount, colCount);
+    // 1. Опрацювання за критерієм (підрахунок суми, кількості та занулення)
+    int S = 0;
+    int k = 0;
+    Calc(Z, rowCount, colCount, S, k);
 
-    // Сортування (перестановка) стовпчиків
+    cout << "Results for criteria (positive or odd elements):" << endl;
+    cout << "S = " << S << endl;
+    cout << "k = " << k << endl << endl;
+
+    cout << "Matrix after replacing criteria elements with zeros:" << endl;
+    Print(Z, rowCount, colCount);
+
+    // 2. Сортування (перестановка) стовпчиків модифікованої матриці
     SortColumns(Z, rowCount, colCount);
 
     cout << "Matrix after sorting columns (descending order by rows 0, then 1, then 2):" << endl;
